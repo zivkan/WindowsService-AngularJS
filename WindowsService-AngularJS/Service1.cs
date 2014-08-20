@@ -7,11 +7,14 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using Service.Web;
 
 namespace WindowsService_AngularJS
 {
     public partial class Service1 : ServiceBase
     {
+        private IDisposable web;
+
         public Service1()
         {
             InitializeComponent();
@@ -19,10 +22,16 @@ namespace WindowsService_AngularJS
 
         protected override void OnStart(string[] args)
         {
+            web = OwinStartup.Start();
         }
 
         protected override void OnStop()
         {
+            if (web != null)
+            {
+                web.Dispose();
+                web = null;
+            }
         }
     }
 }
