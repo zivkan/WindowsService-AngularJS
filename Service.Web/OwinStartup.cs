@@ -1,4 +1,6 @@
-﻿using Microsoft.Owin.Hosting;
+﻿using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.Hosting;
+using Microsoft.Owin.StaticFiles;
 using Owin;
 using System;
 using System.Net;
@@ -17,6 +19,12 @@ namespace Service.Web
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional});
 
             app.UseWebApi(config);
+
+            app.UseFileServer(new FileServerOptions
+            {
+                EnableDefaultFiles = true,
+                FileSystem = new PhysicalFileSystem("htdocs")
+            });
 
             // Make sure OwinHttpListener is statically referenced in this assembly's manifest, so Visual Studio will
             // copy the DLL in the service bin folder.
